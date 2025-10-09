@@ -1,4 +1,4 @@
-# Flutter Task Management App
+# Sike - Flutter App
 
 A complete task management mobile application built with Flutter, featuring local data persistence, intuitive UI, and cross-platform support (iOS & Android).
 
