@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hive/hive.dart';
 import 'package:sike/models/task.dart';
 import 'package:sike/models/task_enums.dart';
-import 'package:sike/models/recurrence_rule.dart';
 import 'package:sike/providers/task_provider.dart';
 import 'package:sike/services/task_service.dart';
 import 'package:sike/screens/search_screen.dart';
+import '../helpers/test_helpers.dart';
 
 void main() {
   group('SearchScreen', () {
@@ -18,37 +17,8 @@ void main() {
     setUp(() async {
       SharedPreferences.setMockInitialValues({});
 
-      // Initialize Hive for tests
-      Hive.init('./test/hive_test');
-
-      // Register adapters
-      if (!Hive.isAdapterRegistered(0)) {
-        Hive.registerAdapter(TaskAdapter());
-      }
-      if (!Hive.isAdapterRegistered(1)) {
-        Hive.registerAdapter(TaskTypeAdapter());
-      }
-      if (!Hive.isAdapterRegistered(2)) {
-        Hive.registerAdapter(RequiredResourceAdapter());
-      }
-      if (!Hive.isAdapterRegistered(3)) {
-        Hive.registerAdapter(TaskContextAdapter());
-      }
-      if (!Hive.isAdapterRegistered(4)) {
-        Hive.registerAdapter(EnergyLevelAdapter());
-      }
-      if (!Hive.isAdapterRegistered(5)) {
-        Hive.registerAdapter(TimeEstimateAdapter());
-      }
-      if (!Hive.isAdapterRegistered(6)) {
-        Hive.registerAdapter(DueDateStatusAdapter());
-      }
-      if (!Hive.isAdapterRegistered(7)) {
-        Hive.registerAdapter(RecurrencePatternAdapter());
-      }
-      if (!Hive.isAdapterRegistered(8)) {
-        Hive.registerAdapter(RecurrenceRuleAdapter());
-      }
+      // Initialize Hive for tests using test helper
+      await TestHelpers.initHive();
 
       taskService = TaskService();
       await taskService.init();
@@ -71,6 +41,11 @@ void main() {
         updatedAt: now,
         taskType: TaskType.administrative,
       ));
+    });
+
+    tearDown(() async {
+      await taskService.close();
+      await TestHelpers.cleanupHive();
     });
 
     testWidgets('displays app bar with title', (tester) async {
@@ -189,10 +164,16 @@ void main() {
 
       // Enter search text
       await tester.enterText(find.byType(TextField), 'test');
-      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
 
-      // Press clear button
-      await tester.tap(find.byIcon(Icons.clear));
+      // Look for the clear button - it may be a close icon
+      final clearButton = find.byIcon(Icons.close);
+      if (clearButton.evaluate().isNotEmpty) {
+        await tester.tap(clearButton);
+      } else {
+        // Try clear icon
+        await tester.tap(find.byIcon(Icons.clear));
+      }
       await tester.pumpAndSettle();
 
       // Should show recent searches again
