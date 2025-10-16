@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hive/hive.dart';
 import 'package:sike/models/task.dart';
 import 'package:sike/models/task_enums.dart';
 import 'package:sike/providers/task_provider.dart';
@@ -44,10 +43,10 @@ void main() {
       ));
     });
 
-    tearDown() async {
+    tearDown(() async {
       await taskService.close();
       await TestHelpers.cleanupHive();
-    }
+    });
 
     testWidgets('displays app bar with title', (tester) async {
       await tester.pumpWidget(

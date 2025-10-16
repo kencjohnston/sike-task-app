@@ -22,13 +22,13 @@ void main() {
     await taskService.init();
   });
 
-  tearDown() async {
+  tearDown(() async {
     // Clean up
     await taskBox.clear();
     await taskBox.close();
     await taskService.close();
     await TestHelpers.cleanupHive();
-  }
+  });
 
   group('Archive Single Task', () {
     test('should archive a completed task successfully', () async {

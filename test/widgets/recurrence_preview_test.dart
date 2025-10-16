@@ -31,9 +31,9 @@ void main() {
     await taskService.close();
   });
 
-  tearDownAll() async {
+  tearDownAll(() async {
     await TestHelpers.cleanupHive();
-  }
+  });
 
   group('RecurrencePreview Widget Tests', () {
     testWidgets('shows nothing when rule is null', (WidgetTester tester) async {

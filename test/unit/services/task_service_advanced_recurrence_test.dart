@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:sike/models/task.dart';
 import 'package:sike/models/task_enums.dart';
 import 'package:sike/models/recurrence_rule.dart';
 import 'package:sike/services/task_service.dart';
