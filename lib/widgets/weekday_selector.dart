@@ -124,7 +124,7 @@ class _WeekdayButton extends StatelessWidget {
     final theme = Theme.of(context);
     final color = isSelected
         ? theme.colorScheme.primary
-        : theme.colorScheme.onSurfaceVariant.withOpacity(0.3);
+        : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.3);
 
     return Tooltip(
       message: tooltip,
@@ -135,7 +135,7 @@ class _WeekdayButton extends StatelessWidget {
           height: 48,
           decoration: BoxDecoration(
             color: isSelected
-                ? theme.colorScheme.primary.withOpacity(0.12)
+                ? theme.colorScheme.primary.withValues(alpha: 0.12)
                 : Colors.transparent,
             border: Border.all(
               color: color,

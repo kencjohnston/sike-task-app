@@ -49,7 +49,7 @@ class _ArchiveGroupHeaderState extends State<ArchiveGroupHeader> {
         horizontal: AppConstants.paddingMedium,
         vertical: AppConstants.paddingSmall,
       ),
-      color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: InkWell(
         onTap: widget.isCollapsible ? _handleToggle : null,
         child: Row(
@@ -85,7 +85,7 @@ class _ArchiveGroupHeaderState extends State<ArchiveGroupHeader> {
                 vertical: 2,
               ),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withOpacity(0.5),
+                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
                 borderRadius:
                     BorderRadius.circular(AppConstants.borderRadiusMedium),
               ),

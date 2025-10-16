@@ -148,17 +148,12 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   }
 
   Widget _buildSortOption(String label, String value) {
+    final bool isSelected = _sortOption == value;
     return ListTile(
       title: Text(label),
-      leading: Radio<String>(
-        value: value,
-        groupValue: _sortOption,
-        onChanged: (newValue) {
-          setState(() {
-            _sortOption = newValue!;
-          });
-          Navigator.pop(context);
-        },
+      leading: Icon(
+        isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+        color: isSelected ? Theme.of(context).colorScheme.primary : null,
       ),
       onTap: () {
         setState(() {
@@ -189,7 +184,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: TextButton.styleFrom(
-              primary: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.error,
             ),
             child: const Text('Delete All'),
           ),
@@ -343,17 +338,20 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
             _showTaskDetails(context, task);
           },
           onRestore: () async {
+            final messenger = ScaffoldMessenger.of(context);
+            final navigator = Navigator.of(context);
+            final errorColor = Theme.of(context).colorScheme.error;
             try {
               await provider.unarchiveTask(task.id);
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
+                messenger.showSnackBar(
                   SnackBar(
                     content: Text('"${task.title}" restored'),
                     duration: const Duration(seconds: 2),
                     action: SnackBarAction(
                       label: 'View',
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        navigator.pop();
                       },
                     ),
                   ),
@@ -361,20 +359,22 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
               }
             } catch (e) {
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
+                messenger.showSnackBar(
                   SnackBar(
                     content: Text('Error: $e'),
-                    backgroundColor: Theme.of(context).colorScheme.error,
+                    backgroundColor: errorColor,
                   ),
                 );
               }
             }
           },
           onDelete: () async {
+            final messenger = ScaffoldMessenger.of(context);
+            final errorColor = Theme.of(context).colorScheme.error;
             try {
               await provider.deleteArchivedTask(task.id);
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
+                messenger.showSnackBar(
                   SnackBar(
                     content: Text('"${task.title}" permanently deleted'),
                     duration: const Duration(seconds: 2),
@@ -383,10 +383,10 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
               }
             } catch (e) {
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
+                messenger.showSnackBar(
                   SnackBar(
                     content: Text('Error: $e'),
-                    backgroundColor: Theme.of(context).colorScheme.error,
+                    backgroundColor: errorColor,
                   ),
                 );
               }

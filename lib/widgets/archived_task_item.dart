@@ -82,7 +82,7 @@ class ArchivedTaskItem extends StatelessWidget {
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   style: TextButton.styleFrom(
-                    primary: theme.colorScheme.error,
+                    foregroundColor: theme.colorScheme.error,
                   ),
                   child: const Text('Delete Permanently'),
                 ),
@@ -104,7 +104,7 @@ class ArchivedTaskItem extends StatelessWidget {
           horizontal: AppConstants.paddingMedium,
           vertical: AppConstants.paddingSmall,
         ),
-        color: theme.colorScheme.surface.withOpacity(0.5),
+        color: theme.colorScheme.surface.withValues(alpha: 0.5),
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
@@ -117,7 +117,7 @@ class ArchivedTaskItem extends StatelessWidget {
                 Icon(
                   Icons.archive,
                   size: AppConstants.iconSizeMedium,
-                  color: theme.colorScheme.onSurface.withOpacity(0.4),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                 ),
                 const SizedBox(width: AppConstants.paddingSmall),
 
@@ -130,7 +130,7 @@ class ArchivedTaskItem extends StatelessWidget {
                       Text(
                         task.title,
                         style: theme.textTheme.titleMedium?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -142,7 +142,7 @@ class ArchivedTaskItem extends StatelessWidget {
                         Text(
                           task.description!,
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(0.4),
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -157,14 +157,14 @@ class ArchivedTaskItem extends StatelessWidget {
                           Icon(
                             Icons.archive_outlined,
                             size: AppConstants.iconSizeSmall,
-                            color: theme.colorScheme.onSurface.withOpacity(0.4),
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             'Archived ${_formatArchivedDate(task.archivedAt)}',
                             style: theme.textTheme.bodySmall?.copyWith(
                               color:
-                                  theme.colorScheme.onSurface.withOpacity(0.4),
+                                  theme.colorScheme.onSurface.withValues(alpha: 0.4),
                               fontStyle: FontStyle.italic,
                             ),
                           ),
@@ -179,7 +179,7 @@ class ArchivedTaskItem extends StatelessWidget {
                             decoration: BoxDecoration(
                               color:
                                   AppConstants.getPriorityColor(task.priority)
-                                      .withOpacity(0.1),
+                                      .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(
                                   AppConstants.borderRadiusSmall),
                             ),
@@ -188,7 +188,7 @@ class ArchivedTaskItem extends StatelessWidget {
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color:
                                     AppConstants.getPriorityColor(task.priority)
-                                        .withOpacity(0.6),
+                                        .withValues(alpha: 0.6),
                                 fontWeight: FontWeight.w500,
                                 fontSize: 11,
                               ),
@@ -206,14 +206,14 @@ class ArchivedTaskItem extends StatelessWidget {
                               Icons.check_circle_outline,
                               size: AppConstants.iconSizeSmall,
                               color:
-                                  theme.colorScheme.onSurface.withOpacity(0.4),
+                                  theme.colorScheme.onSurface.withValues(alpha: 0.4),
                             ),
                             const SizedBox(width: 4),
                             Text(
                               'Completed ${_formatDate(task.completedAt!)}',
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurface
-                                    .withOpacity(0.4),
+                                    .withValues(alpha: 0.4),
                               ),
                             ),
                           ],

@@ -111,7 +111,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
               provider.clearBatchFilters();
             },
             style: TextButton.styleFrom(
-              primary: theme.colorScheme.onPrimaryContainer,
+              foregroundColor: theme.colorScheme.onPrimaryContainer,
               padding: const EdgeInsets.symmetric(horizontal: 8),
             ),
             child: const Text('Clear'),
@@ -228,6 +228,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                       } else if (value == 'delete_all') {
                         if (taskProvider.totalTaskCount == 0) return;
 
+                        final messenger = ScaffoldMessenger.of(context);
                         final confirmed = await showDialog<bool>(
                           context: context,
                           builder: (context) => AlertDialog(
@@ -244,7 +245,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
                                 onPressed: () =>
                                     Navigator.of(context).pop(true),
                                 style: TextButton.styleFrom(
-                                  primary: Theme.of(context).colorScheme.error,
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.error,
                                 ),
                                 child: const Text(AppConstants.delete),
                               ),
@@ -255,7 +257,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                         if (confirmed == true && mounted) {
                           await taskProvider.deleteAllTasks();
                           if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            messenger.showSnackBar(
                               const SnackBar(
                                 content: Text('All tasks deleted'),
                                 duration: Duration(seconds: 2),
@@ -278,10 +280,10 @@ class _TaskListScreenState extends State<TaskListScreen> {
                         ),
                       ),
                       if (taskProvider.totalTaskCount > 0)
-                        PopupMenuItem(
+                        const PopupMenuItem(
                           value: 'delete_all',
                           child: Row(
-                            children: const [
+                            children: [
                               Icon(Icons.delete_sweep, color: Colors.red),
                               SizedBox(width: 8),
                               Text('Delete All Tasks'),
@@ -390,11 +392,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
                                       (!task.isRecurring ||
                                           task.isRecurringInstance)
                                   ? () async {
+                                      final messenger =
+                                          ScaffoldMessenger.of(context);
+                                      final errorColor =
+                                          Theme.of(context).colorScheme.error;
                                       try {
                                         await taskProvider.archiveTask(task.id);
                                         if (mounted) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
+                                          messenger.showSnackBar(
                                             SnackBar(
                                               content: Text(
                                                   '"${task.title}" archived'),
@@ -412,13 +417,10 @@ class _TaskListScreenState extends State<TaskListScreen> {
                                         }
                                       } catch (e) {
                                         if (mounted) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
+                                          messenger.showSnackBar(
                                             SnackBar(
                                               content: Text('Error: $e'),
-                                              backgroundColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .error,
+                                              backgroundColor: errorColor,
                                             ),
                                           );
                                         }
@@ -426,6 +428,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
                                     }
                                   : null,
                               onToggleComplete: () async {
+                                final messenger = ScaffoldMessenger.of(context);
+                                final errorColor =
+                                    Theme.of(context).colorScheme.error;
                                 try {
                                   await taskProvider
                                       .toggleTaskCompletion(task.id);
@@ -436,11 +441,10 @@ class _TaskListScreenState extends State<TaskListScreen> {
                                   }
                                 } catch (e) {
                                   if (mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
+                                    messenger.showSnackBar(
                                       SnackBar(
                                         content: Text('Error: $e'),
-                                        backgroundColor:
-                                            Theme.of(context).colorScheme.error,
+                                        backgroundColor: errorColor,
                                       ),
                                     );
                                   }
@@ -448,6 +452,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
                               },
                               onEdit: () => _navigateToTaskForm(task: task),
                               onDelete: () async {
+                                final messenger = ScaffoldMessenger.of(context);
+                                final errorColor =
+                                    Theme.of(context).colorScheme.error;
                                 try {
                                   // If task has subtasks, delete them too
                                   if (task.isParentTask) {
@@ -465,7 +472,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                                   }
 
                                   if (mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
+                                    messenger.showSnackBar(
                                       SnackBar(
                                         content: Text(
                                           task.isParentTask
@@ -478,11 +485,10 @@ class _TaskListScreenState extends State<TaskListScreen> {
                                   }
                                 } catch (e) {
                                   if (mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
+                                    messenger.showSnackBar(
                                       SnackBar(
                                         content: Text('Error: $e'),
-                                        backgroundColor:
-                                            Theme.of(context).colorScheme.error,
+                                        backgroundColor: errorColor,
                                       ),
                                     );
                                   }
@@ -493,12 +499,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
                               },
                               onPromoteToTopLevel: task.hasParent
                                   ? () async {
+                                      final messenger =
+                                          ScaffoldMessenger.of(context);
+                                      final errorColor =
+                                          Theme.of(context).colorScheme.error;
                                       try {
                                         await taskProvider
                                             .promoteToTopLevel(task.id);
                                         if (mounted) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
+                                          messenger.showSnackBar(
                                             const SnackBar(
                                               content: Text(
                                                   'Task promoted to top-level'),
@@ -508,13 +517,10 @@ class _TaskListScreenState extends State<TaskListScreen> {
                                         }
                                       } catch (e) {
                                         if (mounted) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
+                                          messenger.showSnackBar(
                                             SnackBar(
                                               content: Text('Error: $e'),
-                                              backgroundColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .error,
+                                              backgroundColor: errorColor,
                                             ),
                                           );
                                         }

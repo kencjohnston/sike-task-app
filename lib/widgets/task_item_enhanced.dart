@@ -77,7 +77,7 @@ class TaskItemEnhanced extends StatelessWidget {
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
                 style: TextButton.styleFrom(
-                  primary: theme.colorScheme.error,
+                  foregroundColor: theme.colorScheme.error,
                 ),
                 child: Text(isParentTask ? 'Delete All' : AppConstants.delete),
               ),
@@ -120,7 +120,7 @@ class TaskItemEnhanced extends StatelessWidget {
                                   right: AppConstants.paddingSmall),
                               decoration: BoxDecoration(
                                 color:
-                                    theme.colorScheme.primary.withOpacity(0.3),
+                                    theme.colorScheme.primary.withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(2),
                               ),
                             ),
@@ -176,7 +176,7 @@ class TaskItemEnhanced extends StatelessWidget {
                                         : null,
                                     color: task.isCompleted
                                         ? theme.colorScheme.onSurface
-                                            .withOpacity(0.6)
+                                            .withValues(alpha: 0.6)
                                         : theme.colorScheme.onSurface,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -192,9 +192,9 @@ class TaskItemEnhanced extends StatelessWidget {
                                     style: theme.textTheme.bodyMedium?.copyWith(
                                       color: task.isCompleted
                                           ? theme.colorScheme.onSurface
-                                              .withOpacity(0.4)
+                                              .withValues(alpha: 0.4)
                                           : theme.colorScheme.onSurface
-                                              .withOpacity(0.7),
+                                              .withValues(alpha: 0.7),
                                       decoration: task.isCompleted
                                           ? TextDecoration.lineThrough
                                           : null,
@@ -214,7 +214,7 @@ class TaskItemEnhanced extends StatelessWidget {
                                       Icons.access_time,
                                       size: AppConstants.iconSizeSmall,
                                       color: theme.colorScheme.onSurface
-                                          .withOpacity(0.5),
+                                          .withValues(alpha: 0.5),
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
@@ -222,7 +222,7 @@ class TaskItemEnhanced extends StatelessWidget {
                                       style:
                                           theme.textTheme.bodySmall?.copyWith(
                                         color: theme.colorScheme.onSurface
-                                            .withOpacity(0.5),
+                                            .withValues(alpha: 0.5),
                                       ),
                                     ),
                                     const SizedBox(
@@ -237,7 +237,7 @@ class TaskItemEnhanced extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: AppConstants.getPriorityColor(
                                                 task.priority)
-                                            .withOpacity(0.2),
+                                            .withValues(alpha: 0.2),
                                         borderRadius: BorderRadius.circular(
                                             AppConstants.borderRadiusSmall),
                                       ),
@@ -266,7 +266,7 @@ class TaskItemEnhanced extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           color: task.dueDateStatus
                                               .getColor()
-                                              .withOpacity(0.2),
+                                              .withValues(alpha: 0.2),
                                           borderRadius: BorderRadius.circular(
                                               AppConstants.borderRadiusSmall),
                                         ),
@@ -314,7 +314,7 @@ class TaskItemEnhanced extends StatelessWidget {
                                         ),
                                         decoration: BoxDecoration(
                                           color: theme.colorScheme.primary
-                                              .withOpacity(0.2),
+                                              .withValues(alpha: 0.2),
                                           borderRadius: BorderRadius.circular(
                                               AppConstants.borderRadiusSmall),
                                         ),
@@ -366,7 +366,7 @@ class TaskItemEnhanced extends StatelessWidget {
                                   'Subtasks',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: theme.colorScheme.onSurface
-                                        .withOpacity(0.6),
+                                        .withValues(alpha: 0.6),
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -374,7 +374,7 @@ class TaskItemEnhanced extends StatelessWidget {
                                   '$completedSubtasks/$totalSubtasks completed',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: theme.colorScheme.onSurface
-                                        .withOpacity(0.6),
+                                        .withValues(alpha: 0.6),
                                   ),
                                 ),
                               ],
@@ -388,7 +388,7 @@ class TaskItemEnhanced extends StatelessWidget {
                                     : 0.0,
                                 minHeight: 6,
                                 backgroundColor:
-                                    theme.colorScheme.surfaceVariant,
+                                    theme.colorScheme.surfaceContainerHighest,
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                   theme.colorScheme.primary,
                                 ),
@@ -426,7 +426,7 @@ class TaskItemEnhanced extends StatelessWidget {
               height: 4,
               margin: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
-                color: theme.colorScheme.onSurfaceVariant.withOpacity(0.4),
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -525,7 +525,7 @@ class TaskItemEnhanced extends StatelessWidget {
         vertical: 2,
       ),
       decoration: BoxDecoration(
-        color: theme.colorScheme.tertiary.withOpacity(0.2),
+        color: theme.colorScheme.tertiary.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
       ),
       child: Row(

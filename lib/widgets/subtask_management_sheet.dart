@@ -57,7 +57,7 @@ class _SubtaskManagementSheetState extends State<SubtaskManagementSheet> {
                 height: 4,
                 margin: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurfaceVariant.withOpacity(0.4),
+                  color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -81,7 +81,7 @@ class _SubtaskManagementSheetState extends State<SubtaskManagementSheet> {
                     Text(
                       widget.parentTask.title,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -123,14 +123,14 @@ class _SubtaskManagementSheetState extends State<SubtaskManagementSheet> {
                               Icons.inbox_outlined,
                               size: 48,
                               color:
-                                  theme.colorScheme.onSurface.withOpacity(0.3),
+                                  theme.colorScheme.onSurface.withValues(alpha: 0.3),
                             ),
                             const SizedBox(height: AppConstants.paddingMedium),
                             Text(
                               'No subtasks yet',
                               style: theme.textTheme.bodyLarge?.copyWith(
                                 color: theme.colorScheme.onSurface
-                                    .withOpacity(0.6),
+                                    .withValues(alpha: 0.6),
                               ),
                             ),
                           ],
@@ -145,6 +145,9 @@ class _SubtaskManagementSheetState extends State<SubtaskManagementSheet> {
                             newIndex -= 1;
                           }
 
+                          final messenger = ScaffoldMessenger.of(context);
+                          final errorColor = theme.colorScheme.error;
+
                           try {
                             await taskProvider.reorderSubtasks(
                               widget.parentTask.id,
@@ -153,7 +156,7 @@ class _SubtaskManagementSheetState extends State<SubtaskManagementSheet> {
                             );
 
                             if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              messenger.showSnackBar(
                                 const SnackBar(
                                   content: Text('Subtasks reordered'),
                                   duration: Duration(seconds: 1),
@@ -162,10 +165,10 @@ class _SubtaskManagementSheetState extends State<SubtaskManagementSheet> {
                             }
                           } catch (e) {
                             if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              messenger.showSnackBar(
                                 SnackBar(
                                   content: Text('Error: $e'),
-                                  backgroundColor: theme.colorScheme.error,
+                                  backgroundColor: errorColor,
                                 ),
                               );
                             }
@@ -206,7 +209,8 @@ class _SubtaskManagementSheetState extends State<SubtaskManagementSheet> {
                                       onPressed: () =>
                                           Navigator.of(context).pop(true),
                                       style: TextButton.styleFrom(
-                                        primary: theme.colorScheme.error,
+                                        foregroundColor:
+                                            theme.colorScheme.error,
                                       ),
                                       child: const Text(AppConstants.delete),
                                     ),
@@ -215,13 +219,16 @@ class _SubtaskManagementSheetState extends State<SubtaskManagementSheet> {
                               );
                             },
                             onDismissed: (direction) async {
+                              final messenger = ScaffoldMessenger.of(context);
+                              final errorColor = theme.colorScheme.error;
+
                               try {
                                 await taskProvider.deleteTask(subtask.id);
                                 await taskProvider
                                     .updateParentProgress(widget.parentTask.id);
 
                                 if (mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  messenger.showSnackBar(
                                     const SnackBar(
                                       content: Text('Subtask deleted'),
                                       duration: Duration(seconds: 2),
@@ -230,10 +237,10 @@ class _SubtaskManagementSheetState extends State<SubtaskManagementSheet> {
                                 }
                               } catch (e) {
                                 if (mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  messenger.showSnackBar(
                                     SnackBar(
                                       content: Text('Error: $e'),
-                                      backgroundColor: theme.colorScheme.error,
+                                      backgroundColor: errorColor,
                                     ),
                                   );
                                 }
@@ -247,12 +254,17 @@ class _SubtaskManagementSheetState extends State<SubtaskManagementSheet> {
                                   Icon(
                                     Icons.drag_handle,
                                     color: theme.colorScheme.onSurface
-                                        .withOpacity(0.4),
+                                        .withValues(alpha: 0.4),
                                   ),
                                   const SizedBox(width: 8),
                                   Checkbox(
                                     value: subtask.isCompleted,
                                     onChanged: (_) async {
+                                      final messenger =
+                                          ScaffoldMessenger.of(context);
+                                      final errorColor =
+                                          theme.colorScheme.error;
+
                                       try {
                                         await taskProvider
                                             .toggleTaskCompletion(subtask.id);
@@ -260,12 +272,10 @@ class _SubtaskManagementSheetState extends State<SubtaskManagementSheet> {
                                             widget.parentTask.id);
                                       } catch (e) {
                                         if (mounted) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
+                                          messenger.showSnackBar(
                                             SnackBar(
                                               content: Text('Error: $e'),
-                                              backgroundColor:
-                                                  theme.colorScheme.error,
+                                              backgroundColor: errorColor,
                                             ),
                                           );
                                         }
@@ -283,7 +293,7 @@ class _SubtaskManagementSheetState extends State<SubtaskManagementSheet> {
                                       : null,
                                   color: subtask.isCompleted
                                       ? theme.colorScheme.onSurface
-                                          .withOpacity(0.6)
+                                          .withValues(alpha: 0.6)
                                       : theme.colorScheme.onSurface,
                                 ),
                               ),
@@ -303,9 +313,9 @@ class _SubtaskManagementSheetState extends State<SubtaskManagementSheet> {
                                             : null,
                                         color: subtask.isCompleted
                                             ? theme.colorScheme.onSurface
-                                                .withOpacity(0.4)
+                                                .withValues(alpha: 0.4)
                                             : theme.colorScheme.onSurface
-                                                .withOpacity(0.7),
+                                                .withValues(alpha: 0.7),
                                       ),
                                     ),
                                   if (subtask.dueDate != null) ...[
@@ -342,7 +352,7 @@ class _SubtaskManagementSheetState extends State<SubtaskManagementSheet> {
                                 decoration: BoxDecoration(
                                   color: AppConstants.getPriorityColor(
                                           subtask.priority)
-                                      .withOpacity(0.2),
+                                      .withValues(alpha: 0.2),
                                   borderRadius: BorderRadius.circular(
                                       AppConstants.borderRadiusSmall),
                                 ),

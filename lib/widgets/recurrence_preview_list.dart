@@ -59,7 +59,7 @@ class RecurrencePreviewList extends StatelessWidget {
               width: 24,
               height: 24,
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.2),
+                color: Colors.blue.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -88,7 +88,7 @@ class RecurrencePreviewList extends StatelessWidget {
       child: ListTile(
         dense: true,
         leading: CircleAvatar(
-          backgroundColor: Colors.blue.withOpacity(0.2),
+          backgroundColor: Colors.blue.withValues(alpha: 0.2),
           child: Text(
             index.toString(),
             style: const TextStyle(

@@ -145,7 +145,7 @@ class _MonthlyPatternSelectorState extends State<MonthlyPatternSelector> {
         Container(
           padding: const EdgeInsets.all(AppConstants.paddingSmall),
           decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+            color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
           ),
           child: Row(
@@ -269,12 +269,12 @@ class _PatternTypeChip extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? theme.colorScheme.primary.withOpacity(0.12)
+              ? theme.colorScheme.primary.withValues(alpha: 0.12)
               : Colors.transparent,
           border: Border.all(
             color: isSelected
                 ? theme.colorScheme.primary
-                : theme.colorScheme.outline.withOpacity(0.3),
+                : theme.colorScheme.outline.withValues(alpha: 0.3),
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
@@ -332,12 +332,12 @@ class _DayChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? theme.colorScheme.primary
-              : theme.colorScheme.surfaceVariant,
+              : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusSmall),
           border: Border.all(
             color: isSelected
                 ? theme.colorScheme.primary
-                : theme.colorScheme.outline.withOpacity(0.3),
+                : theme.colorScheme.outline.withValues(alpha: 0.3),
           ),
         ),
         child: Center(

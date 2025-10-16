@@ -37,7 +37,7 @@ class InstanceTimelineItem extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.2),
+                  color: statusColor.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -121,20 +121,20 @@ class InstanceTimelineItem extends StatelessWidget {
                     }
                   },
                   itemBuilder: (context) => [
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       value: 'skip',
                       child: Row(
-                        children: const [
+                        children: [
                           Icon(Icons.fast_forward, size: 20),
                           SizedBox(width: 8),
                           Text('Skip'),
                         ],
                       ),
                     ),
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       value: 'reschedule',
                       child: Row(
-                        children: const [
+                        children: [
                           Icon(Icons.schedule, size: 20),
                           SizedBox(width: 8),
                           Text('Reschedule'),
@@ -280,10 +280,10 @@ class _StatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: color.withOpacity(0.5),
+          color: color.withValues(alpha: 0.5),
           width: 1,
         ),
       ),

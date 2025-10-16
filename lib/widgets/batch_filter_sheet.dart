@@ -107,7 +107,7 @@ class _BatchFilterSheetState extends State<BatchFilterSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: theme.colorScheme.outline.withOpacity(0.4),
+              color: theme.colorScheme.outline.withValues(alpha: 0.4),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -146,7 +146,7 @@ class _BatchFilterSheetState extends State<BatchFilterSheet> {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(AppConstants.paddingMedium),
-              color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -213,7 +213,7 @@ class _BatchFilterSheetState extends State<BatchFilterSheet> {
                   title: 'Task Type',
                   icon: Icons.category,
                   child: DropdownButtonFormField<TaskType>(
-                    value: _selectedTaskType,
+                    initialValue: _selectedTaskType,
                     decoration: const InputDecoration(
                       hintText: 'Select task type',
                       border: OutlineInputBorder(),
@@ -276,7 +276,7 @@ class _BatchFilterSheetState extends State<BatchFilterSheet> {
                   title: 'Context',
                   icon: Icons.place,
                   child: DropdownButtonFormField<TaskContext>(
-                    value: _selectedContext,
+                    initialValue: _selectedContext,
                     decoration: const InputDecoration(
                       hintText: 'Select context',
                       border: OutlineInputBorder(),
@@ -341,7 +341,7 @@ class _BatchFilterSheetState extends State<BatchFilterSheet> {
                   title: 'Time Estimate',
                   icon: Icons.schedule,
                   child: DropdownButtonFormField<TimeEstimate>(
-                    value: _selectedTimeEstimate,
+                    initialValue: _selectedTimeEstimate,
                     decoration: const InputDecoration(
                       hintText: 'Select time estimate',
                       border: OutlineInputBorder(),
@@ -380,7 +380,7 @@ class _BatchFilterSheetState extends State<BatchFilterSheet> {
               color: theme.colorScheme.surface,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, -2),
                 ),

@@ -350,7 +350,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.6),
+                        .withValues(alpha: 0.6),
                   ),
             ),
           ),

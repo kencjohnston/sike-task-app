@@ -139,7 +139,7 @@ class SearchResultItem extends StatelessWidget {
                       child: RichText(
                         text: TextSpan(
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           ),
                           children: _buildHighlightedText(
                             task.description!.length > 100
@@ -183,7 +183,7 @@ class SearchResultItem extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: _getPriorityColor(context).withOpacity(0.1),
+                            color: _getPriorityColor(context).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: _getPriorityColor(context),
@@ -248,7 +248,7 @@ class SearchResultItem extends StatelessWidget {
             // Navigation arrow
             Icon(
               Icons.chevron_right,
-              color: theme.colorScheme.onSurface.withOpacity(0.3),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
             ),
           ],
         ),

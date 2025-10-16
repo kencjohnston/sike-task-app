@@ -114,10 +114,10 @@ class _StreakIndicatorState extends State<StreakIndicator>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: widget.color.withOpacity(0.1),
+          color: widget.color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: widget.color.withOpacity(0.3),
+            color: widget.color.withValues(alpha: 0.3),
             width: 2,
           ),
         ),
@@ -213,10 +213,10 @@ class StreakBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: (color ?? Colors.deepOrange).withOpacity(0.2),
+        color: (color ?? Colors.deepOrange).withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: (color ?? Colors.deepOrange).withOpacity(0.5),
+          color: (color ?? Colors.deepOrange).withValues(alpha: 0.5),
           width: 1,
         ),
       ),

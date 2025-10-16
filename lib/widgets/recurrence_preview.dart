@@ -68,7 +68,7 @@ class RecurrencePreview extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.all(AppConstants.paddingMedium),
         decoration: BoxDecoration(
-          color: theme.colorScheme.errorContainer.withOpacity(0.3),
+          color: theme.colorScheme.errorContainer.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
         ),
         child: Row(
@@ -116,7 +116,7 @@ class RecurrencePreview extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             border: Border.all(
-              color: theme.colorScheme.outline.withOpacity(0.3),
+              color: theme.colorScheme.outline.withValues(alpha: 0.3),
             ),
             borderRadius:
                 BorderRadius.circular(AppConstants.borderRadiusMedium),
@@ -213,7 +213,7 @@ class _OccurrenceItem extends StatelessWidget {
             ? null
             : Border(
                 bottom: BorderSide(
-                  color: theme.colorScheme.outline.withOpacity(0.2),
+                  color: theme.colorScheme.outline.withValues(alpha: 0.2),
                 ),
               ),
       ),
@@ -224,7 +224,7 @@ class _OccurrenceItem extends StatelessWidget {
             width: 24,
             height: 24,
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withOpacity(0.12),
+              color: theme.colorScheme.primary.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
             child: Center(

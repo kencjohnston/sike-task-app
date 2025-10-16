@@ -49,7 +49,7 @@ class TaskItem extends StatelessWidget {
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
                 style: TextButton.styleFrom(
-                  primary: theme.colorScheme.error,
+                  foregroundColor: theme.colorScheme.error,
                 ),
                 child: const Text(AppConstants.delete),
               ),
@@ -92,7 +92,7 @@ class TaskItem extends StatelessWidget {
                               ? TextDecoration.lineThrough
                               : null,
                           color: task.isCompleted
-                              ? theme.colorScheme.onSurface.withOpacity(0.6)
+                              ? theme.colorScheme.onSurface.withValues(alpha: 0.6)
                               : theme.colorScheme.onSurface,
                           fontWeight: FontWeight.w500,
                         ),
@@ -106,8 +106,8 @@ class TaskItem extends StatelessWidget {
                           task.description!,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: task.isCompleted
-                                ? theme.colorScheme.onSurface.withOpacity(0.4)
-                                : theme.colorScheme.onSurface.withOpacity(0.7),
+                                ? theme.colorScheme.onSurface.withValues(alpha: 0.4)
+                                : theme.colorScheme.onSurface.withValues(alpha: 0.7),
                             decoration: task.isCompleted
                                 ? TextDecoration.lineThrough
                                 : null,
@@ -125,14 +125,14 @@ class TaskItem extends StatelessWidget {
                           Icon(
                             Icons.access_time,
                             size: AppConstants.iconSizeSmall,
-                            color: theme.colorScheme.onSurface.withOpacity(0.5),
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             _formatDate(task.createdAt),
                             style: theme.textTheme.bodySmall?.copyWith(
                               color:
-                                  theme.colorScheme.onSurface.withOpacity(0.5),
+                                  theme.colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
                           ),
                           const SizedBox(width: AppConstants.paddingMedium),
@@ -146,7 +146,7 @@ class TaskItem extends StatelessWidget {
                             decoration: BoxDecoration(
                               color:
                                   AppConstants.getPriorityColor(task.priority)
-                                      .withOpacity(0.2),
+                                      .withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(
                                   AppConstants.borderRadiusSmall),
                             ),

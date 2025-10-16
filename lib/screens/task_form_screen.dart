@@ -584,7 +584,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                             const EdgeInsets.all(AppConstants.paddingMedium),
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: theme.colorScheme.outline.withOpacity(0.5),
+                            color: theme.colorScheme.outline.withValues(alpha: 0.5),
                           ),
                           borderRadius: BorderRadius.circular(
                               AppConstants.borderRadiusMedium),
@@ -664,7 +664,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
 
                       // Pattern dropdown
                       DropdownButtonFormField<RecurrencePattern>(
-                        value: _recurrencePattern,
+                        initialValue: _recurrencePattern,
                         decoration: InputDecoration(
                           labelText: 'Repeat',
                           border: const OutlineInputBorder(),
@@ -887,7 +887,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   color: theme.colorScheme.outline
-                                      .withOpacity(0.5),
+                                      .withValues(alpha: 0.5),
                                 ),
                                 borderRadius: BorderRadius.circular(
                                     AppConstants.borderRadiusMedium),
@@ -954,7 +954,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                                 const EdgeInsets.all(AppConstants.paddingSmall),
                             decoration: BoxDecoration(
                               color: theme.colorScheme.primaryContainer
-                                  .withOpacity(0.3),
+                                  .withValues(alpha: 0.3),
                               borderRadius: BorderRadius.circular(
                                   AppConstants.borderRadiusSmall),
                             ),
@@ -990,7 +990,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                               const EdgeInsets.all(AppConstants.paddingSmall),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.errorContainer
-                                .withOpacity(0.3),
+                                .withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(
                                 AppConstants.borderRadiusSmall),
                           ),
@@ -1061,7 +1061,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
 
                       // Task Type
                       DropdownButtonFormField<TaskType>(
-                        value: _taskType,
+                        initialValue: _taskType,
                         decoration: InputDecoration(
                           labelText: 'Task Type',
                           border: const OutlineInputBorder(),
@@ -1121,7 +1121,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
 
                       // Context
                       DropdownButtonFormField<TaskContext>(
-                        value: _taskContext,
+                        initialValue: _taskContext,
                         decoration: InputDecoration(
                           labelText: 'Context',
                           border: const OutlineInputBorder(),
@@ -1183,7 +1183,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
 
                       // Time Estimate
                       DropdownButtonFormField<TimeEstimate>(
-                        value: _timeEstimate,
+                        initialValue: _timeEstimate,
                         decoration: InputDecoration(
                           labelText: 'Estimated Time',
                           border: const OutlineInputBorder(),
@@ -1216,7 +1216,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
               // Show inherited metadata for subtasks
               const SizedBox(height: AppConstants.paddingMedium),
               Card(
-                color: theme.colorScheme.surfaceVariant,
+                color: theme.colorScheme.surfaceContainerHighest,
                 child: Padding(
                   padding: const EdgeInsets.all(AppConstants.paddingMedium),
                   child: Column(
@@ -1473,11 +1473,11 @@ class _PriorityChip extends StatelessWidget {
           vertical: AppConstants.paddingSmall,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.2) : Colors.transparent,
+          color: isSelected ? color.withValues(alpha: 0.2) : Colors.transparent,
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
           border: Border.all(
             color:
-                isSelected ? color : theme.colorScheme.outline.withOpacity(0.3),
+                isSelected ? color : theme.colorScheme.outline.withValues(alpha: 0.3),
             width: isSelected ? 2 : 1,
           ),
         ),

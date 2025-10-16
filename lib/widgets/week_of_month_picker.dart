@@ -40,7 +40,7 @@ class WeekOfMonthPicker extends StatelessWidget {
               onChanged(weekValue);
             }
           },
-          selectedColor: theme.colorScheme.primary.withOpacity(0.2),
+          selectedColor: theme.colorScheme.primary.withValues(alpha: 0.2),
           labelStyle: TextStyle(
             color: isSelected
                 ? theme.colorScheme.primary
@@ -93,11 +93,11 @@ class WeekOfMonthSegmentedPicker extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? theme.colorScheme.primary
-                      : theme.colorScheme.surfaceVariant,
+                      : theme.colorScheme.surfaceContainerHighest,
                   border: Border.all(
                     color: isSelected
                         ? theme.colorScheme.primary
-                        : theme.colorScheme.outline.withOpacity(0.3),
+                        : theme.colorScheme.outline.withValues(alpha: 0.3),
                   ),
                   borderRadius: BorderRadius.horizontal(
                     left: isFirst
