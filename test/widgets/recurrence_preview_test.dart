@@ -1,43 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:sike/widgets/recurrence_preview.dart';
 import 'package:sike/models/recurrence_rule.dart';
 import 'package:sike/models/task_enums.dart';
-import 'package:sike/models/task.dart';
 import 'package:sike/services/task_service.dart';
+import '../helpers/test_helpers.dart';
 
 void main() {
   late TaskService taskService;
 
   setUpAll(() async {
-    await Hive.initFlutter();
+    // Initialize Hive for testing using test helper
+    await TestHelpers.initHive();
 
-    // Register adapters
-    if (!Hive.isAdapterRegistered(0)) {
-      Hive.registerAdapter(TaskAdapter());
-    }
-    if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(TaskTypeAdapter());
-    }
-    if (!Hive.isAdapterRegistered(2)) {
-      Hive.registerAdapter(RequiredResourceAdapter());
-    }
-    if (!Hive.isAdapterRegistered(3)) {
-      Hive.registerAdapter(TaskContextAdapter());
-    }
-    if (!Hive.isAdapterRegistered(4)) {
-      Hive.registerAdapter(EnergyLevelAdapter());
-    }
-    if (!Hive.isAdapterRegistered(5)) {
-      Hive.registerAdapter(TimeEstimateAdapter());
-    }
-    if (!Hive.isAdapterRegistered(6)) {
-      Hive.registerAdapter(RecurrenceRuleAdapter());
-    }
-    if (!Hive.isAdapterRegistered(7)) {
-      Hive.registerAdapter(RecurrencePatternAdapter());
-    }
+    // Register additional adapter that might be missing
     if (!Hive.isAdapterRegistered(9)) {
       Hive.registerAdapter(MonthlyRecurrenceTypeAdapter());
     }
@@ -53,6 +30,10 @@ void main() {
     await taskService.deleteAllTasks();
     await taskService.close();
   });
+
+  tearDownAll() async {
+    await TestHelpers.cleanupHive();
+  }
 
   group('RecurrencePreview Widget Tests', () {
     testWidgets('shows nothing when rule is null', (WidgetTester tester) async {

@@ -1,43 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:sike/models/task.dart';
 import 'package:sike/models/task_enums.dart';
 import 'package:sike/models/recurrence_rule.dart';
 import 'package:sike/services/task_service.dart';
+import '../../helpers/test_helpers.dart';
 
 void main() {
   late TaskService taskService;
   late Box<Task> taskBox;
 
   setUp(() async {
-    // Initialize Hive for testing
-    await Hive.initFlutter();
-
-    // Register adapters
-    if (!Hive.isAdapterRegistered(0)) {
-      Hive.registerAdapter(TaskAdapter());
-    }
-    if (!Hive.isAdapterRegistered(1)) {
-      Hive.registerAdapter(TaskTypeAdapter());
-    }
-    if (!Hive.isAdapterRegistered(2)) {
-      Hive.registerAdapter(RequiredResourceAdapter());
-    }
-    if (!Hive.isAdapterRegistered(3)) {
-      Hive.registerAdapter(TaskContextAdapter());
-    }
-    if (!Hive.isAdapterRegistered(4)) {
-      Hive.registerAdapter(EnergyLevelAdapter());
-    }
-    if (!Hive.isAdapterRegistered(5)) {
-      Hive.registerAdapter(TimeEstimateAdapter());
-    }
-    if (!Hive.isAdapterRegistered(6)) {
-      Hive.registerAdapter(RecurrenceRuleAdapter());
-    }
-    if (!Hive.isAdapterRegistered(7)) {
-      Hive.registerAdapter(RecurrencePatternAdapter());
-    }
+    // Initialize Hive for testing using test helper
+    await TestHelpers.initHive();
 
     // Open a test box
     taskBox = await Hive.openBox<Task>('test_tasks_archive');
@@ -47,12 +22,13 @@ void main() {
     await taskService.init();
   });
 
-  tearDown(() async {
+  tearDown() async {
     // Clean up
     await taskBox.clear();
     await taskBox.close();
-    await Hive.deleteBoxFromDisk('test_tasks_archive');
-  });
+    await taskService.close();
+    await TestHelpers.cleanupHive();
+  }
 
   group('Archive Single Task', () {
     test('should archive a completed task successfully', () async {
