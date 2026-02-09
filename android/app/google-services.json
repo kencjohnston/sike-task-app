@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "271765796943",
+    "project_id": "sike-task-app",
+    "storage_bucket": "sike-task-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271765796943:android:81784189a8af68b51d123a",
+        "android_client_info": {
+          "package_name": "com.sike.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7P4LFvOYvJPCblyJOgY0ZTxELrnx8JZc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

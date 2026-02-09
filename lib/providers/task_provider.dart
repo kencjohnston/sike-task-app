@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+import 'dart:async';
 import '../models/task.dart';
 import '../models/task_enums.dart';
 import '../models/recurring_task_stats.dart';
 import '../services/task_service.dart';
 import '../services/recurring_task_service.dart';
+import '../services/auth_service.dart';
+import '../services/firestore_service.dart';
 
 /// Enum for task filtering
 enum TaskFilter {
@@ -25,7 +28,13 @@ enum DueDateFilter {
 /// Provider class for managing task state and business logic
 class TaskProvider extends ChangeNotifier {
   final TaskService _taskService;
+  final FirestoreService _firestoreService = FirestoreService();
+  final AuthService _authService = AuthService();
   final RecurringTaskService _recurringTaskService = RecurringTaskService();
+
+  StreamSubscription<List<Task>>? _tasksSubscription;
+  StreamSubscription? _authSubscription;
+
   List<Task> _tasks = [];
   TaskFilter _filter = TaskFilter.all;
   bool _isLoading = false;
@@ -56,7 +65,46 @@ class TaskProvider extends ChangeNotifier {
   bool _showArchived = false;
   int _archivedTasksCount = 0;
 
-  TaskProvider(this._taskService);
+  TaskProvider(this._taskService) {
+    _initAuth();
+  }
+
+  void _initAuth() {
+    _authSubscription = _authService.authStateChanges.listen((user) {
+      if (user != null) {
+        _subscribeToTasks();
+      } else {
+        _tasks = [];
+        _tasksSubscription?.cancel();
+        notifyListeners();
+        // Auto sign-in anonymously
+        _authService.signInAnonymously();
+      }
+    });
+  }
+
+  void _subscribeToTasks() {
+    _tasksSubscription?.cancel();
+    _isLoading = true;
+    notifyListeners();
+
+    _tasksSubscription = _firestoreService.getTasksStream().listen((tasks) {
+      _tasks = tasks;
+      _isLoading = false;
+      notifyListeners();
+    }, onError: (error) {
+      _errorMessage = error.toString();
+      _isLoading = false;
+      notifyListeners();
+    });
+  }
+
+  @override
+  void dispose() {
+    _tasksSubscription?.cancel();
+    _authSubscription?.cancel();
+    super.dispose();
+  }
 
   // Getters
   List<Task> get tasks {
@@ -98,21 +146,9 @@ class TaskProvider extends ChangeNotifier {
 
   /// Load all tasks from the database
   Future<void> loadTasks() async {
-    try {
-      _isLoading = true;
-      _errorMessage = null;
-      notifyListeners();
-
-      _tasks = _taskService.getAllTasks();
-      _tasks.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-      _updateArchivedCount();
-
-      _isLoading = false;
-      notifyListeners();
-    } catch (e) {
-      _isLoading = false;
-      _errorMessage = 'Failed to load tasks: $e';
-      notifyListeners();
+    // No-op: Tasks are loaded via stream subscription in constructor
+    if (_tasks.isEmpty && _isLoading) {
+      // Wait for initial load if needed, or just let the UI show loading state
     }
   }
 
@@ -147,9 +183,8 @@ class TaskProvider extends ChangeNotifier {
             'First parameter must be either a String or Task object');
       }
 
-      await _taskService.addTask(task);
-      _tasks.insert(0, task); // Add to beginning of list
-      notifyListeners();
+      await _firestoreService.addTask(task);
+      // _tasks list is updated via stream
     } catch (e) {
       _errorMessage = 'Failed to add task: $e';
       notifyListeners();
@@ -166,13 +201,8 @@ class TaskProvider extends ChangeNotifier {
         updatedAt: DateTime.now(),
       );
 
-      await _taskService.updateTask(taskWithUpdatedTime);
-
-      final index = _tasks.indexWhere((task) => task.id == updatedTask.id);
-      if (index != -1) {
-        _tasks[index] = taskWithUpdatedTime;
-        notifyListeners();
-      }
+      await _firestoreService.updateTask(taskWithUpdatedTime);
+      // _tasks list is updated via stream
     } catch (e) {
       _errorMessage = 'Failed to update task: $e';
       notifyListeners();
@@ -194,33 +224,25 @@ class TaskProvider extends ChangeNotifier {
         updatedAt: DateTime.now(),
       );
 
-      await _taskService.updateTask(updatedTask);
+      await _firestoreService.updateTask(updatedTask);
 
-      final index = _tasks.indexWhere((task) => task.id == id);
-      if (index != -1) {
-        _tasks[index] = updatedTask;
-      }
-
-      // If completing a recurring task, update streak and create next instance
+      // If completing a recurring task, handle recurrence logic
       if (isCompletingTask && task.isRecurring) {
+        // TODO: Implement full recurring task logic with Firestore
+        // For now, we just mark it as completed.
+        // The complex logic from TaskService needs to be ported to work with Firestore/Provider state.
+        /*
         // Update streak information
         await _taskService.updateRecurringTaskStreak(updatedTask);
-
-        // Reload the task to get updated streak info
-        final updatedTaskWithStreak = _taskService.getTaskById(id);
-        if (updatedTaskWithStreak != null) {
-          _tasks[index] = updatedTaskWithStreak;
-        }
 
         // Create next instance
         final nextInstance =
             await _taskService.createNextRecurringInstance(updatedTask);
         if (nextInstance != null) {
-          _tasks.insert(0, nextInstance); // Add to beginning of list
+           await _firestoreService.addTask(nextInstance);
         }
+        */
       }
-
-      notifyListeners();
     } catch (e) {
       _errorMessage = 'Failed to toggle task: $e';
       notifyListeners();
@@ -232,10 +254,8 @@ class TaskProvider extends ChangeNotifier {
   Future<void> deleteTask(String id) async {
     try {
       _errorMessage = null;
-
-      await _taskService.deleteTask(id);
-      _tasks.removeWhere((task) => task.id == id);
-      notifyListeners();
+      await _firestoreService.deleteTask(id);
+      // _tasks list is updated via stream
     } catch (e) {
       _errorMessage = 'Failed to delete task: $e';
       notifyListeners();
@@ -247,10 +267,10 @@ class TaskProvider extends ChangeNotifier {
   Future<void> deleteAllTasks() async {
     try {
       _errorMessage = null;
-
-      await _taskService.deleteAllTasks();
-      _tasks.clear();
-      notifyListeners();
+      // Delete each task individually for now as Firestore doesn't have "delete collection" from client
+      // Or use a batch if list is small
+      final taskIds = _tasks.map((t) => t.id).toList();
+      await _firestoreService.batchDelete(taskIds);
     } catch (e) {
       _errorMessage = 'Failed to delete all tasks: $e';
       notifyListeners();
@@ -388,8 +408,8 @@ class TaskProvider extends ChangeNotifier {
       );
 
       // Save to database
-      await _taskService.addTask(newSubtask);
-      await _taskService.updateTask(updatedParent);
+      await _firestoreService.addTask(newSubtask);
+      await _firestoreService.updateTask(updatedParent);
 
       // Update local state
       _tasks.add(newSubtask);
@@ -426,7 +446,7 @@ class TaskProvider extends ChangeNotifier {
           subtaskIds: parent.subtaskIds.where((id) => id != taskId).toList(),
           updatedAt: now,
         );
-        await _taskService.updateTask(updatedParent);
+        await _firestoreService.updateTask(updatedParent);
 
         final parentIndex = _tasks.indexWhere((t) => t.id == task.parentTaskId);
         if (parentIndex != -1) {
@@ -445,7 +465,7 @@ class TaskProvider extends ChangeNotifier {
         updatedAt: now,
       );
 
-      await _taskService.updateTask(updatedTask);
+      await _firestoreService.updateTask(updatedTask);
 
       final taskIndex = _tasks.indexWhere((t) => t.id == taskId);
       if (taskIndex != -1) {
@@ -475,7 +495,7 @@ class TaskProvider extends ChangeNotifier {
           subtaskIds: oldParent.subtaskIds.where((id) => id != taskId).toList(),
           updatedAt: now,
         );
-        await _taskService.updateTask(updatedOldParent);
+        await _firestoreService.updateTask(updatedOldParent);
 
         final oldParentIndex =
             _tasks.indexWhere((t) => t.id == task.parentTaskId);
@@ -525,7 +545,7 @@ class TaskProvider extends ChangeNotifier {
           subtaskIds: [...newParent.subtaskIds, taskId],
           updatedAt: now,
         );
-        await _taskService.updateTask(updatedNewParent);
+        await _firestoreService.updateTask(updatedNewParent);
 
         final newParentIndex = _tasks.indexWhere((t) => t.id == newParentId);
         if (newParentIndex != -1) {
@@ -533,7 +553,7 @@ class TaskProvider extends ChangeNotifier {
         }
       }
 
-      await _taskService.updateTask(updatedTask);
+      await _firestoreService.updateTask(updatedTask);
 
       final taskIndex = _tasks.indexWhere((t) => t.id == taskId);
       if (taskIndex != -1) {
@@ -574,7 +594,7 @@ class TaskProvider extends ChangeNotifier {
           sortOrder: i,
           updatedAt: now,
         );
-        await _taskService.updateTask(updatedSubtask);
+        await _firestoreService.updateTask(updatedSubtask);
 
         final subtaskIndex = _tasks.indexWhere((t) => t.id == subtaskIds[i]);
         if (subtaskIndex != -1) {
@@ -587,7 +607,7 @@ class TaskProvider extends ChangeNotifier {
         subtaskIds: subtaskIds,
         updatedAt: now,
       );
-      await _taskService.updateTask(updatedParent);
+      await _firestoreService.updateTask(updatedParent);
 
       final parentIndex = _tasks.indexWhere((t) => t.id == parentId);
       if (parentIndex != -1) {
@@ -621,7 +641,7 @@ class TaskProvider extends ChangeNotifier {
           isCompleted: shouldBeCompleted,
           updatedAt: now,
         );
-        await _taskService.updateTask(updatedTask);
+        await _firestoreService.updateTask(updatedTask);
 
         final taskIndex = _tasks.indexWhere((t) => t.id == taskId);
         if (taskIndex != -1) {
@@ -1175,20 +1195,14 @@ class TaskProvider extends ChangeNotifier {
   Future<void> archiveTask(String taskId) async {
     try {
       _errorMessage = null;
-      await _taskService.archiveTask(taskId);
-
-      final index = _tasks.indexWhere((task) => task.id == taskId);
-      if (index != -1) {
-        final task = _tasks[index];
-        final archivedTask = task.copyWith(
-          isArchived: true,
-          archivedAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        );
-        _tasks[index] = archivedTask;
-        _updateArchivedCount();
-        notifyListeners();
-      }
+      final task = _tasks.firstWhere((t) => t.id == taskId);
+      final archivedTask = task.copyWith(
+        isArchived: true,
+        archivedAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+      await _firestoreService.updateTask(archivedTask);
+      // _tasks list updated via stream
     } catch (e) {
       _errorMessage = 'Failed to archive task: $e';
       notifyListeners();
@@ -1200,20 +1214,14 @@ class TaskProvider extends ChangeNotifier {
   Future<void> unarchiveTask(String taskId) async {
     try {
       _errorMessage = null;
-      await _taskService.unarchiveTask(taskId);
-
-      final index = _tasks.indexWhere((task) => task.id == taskId);
-      if (index != -1) {
-        final task = _tasks[index];
-        final unarchivedTask = task.copyWith(
-          isArchived: false,
-          archivedAt: null,
-          updatedAt: DateTime.now(),
-        );
-        _tasks[index] = unarchivedTask;
-        _updateArchivedCount();
-        notifyListeners();
-      }
+      final task = _tasks.firstWhere((t) => t.id == taskId);
+      final unarchivedTask = task.copyWith(
+        isArchived: false,
+        archivedAt: null,
+        updatedAt: DateTime.now(),
+      );
+      await _firestoreService.updateTask(unarchivedTask);
+      // _tasks list updated via stream
     } catch (e) {
       _errorMessage = 'Failed to unarchive task: $e';
       notifyListeners();
@@ -1225,23 +1233,9 @@ class TaskProvider extends ChangeNotifier {
   Future<void> archiveMultipleTasks(List<String> taskIds) async {
     try {
       _errorMessage = null;
-      await _taskService.archiveMultipleTasks(taskIds);
-
       for (final taskId in taskIds) {
-        final index = _tasks.indexWhere((task) => task.id == taskId);
-        if (index != -1) {
-          final task = _tasks[index];
-          final archivedTask = task.copyWith(
-            isArchived: true,
-            archivedAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          );
-          _tasks[index] = archivedTask;
-        }
+        await archiveTask(taskId);
       }
-
-      _updateArchivedCount();
-      notifyListeners();
     } catch (e) {
       _errorMessage = 'Failed to archive tasks: $e';
       notifyListeners();
@@ -1253,10 +1247,8 @@ class TaskProvider extends ChangeNotifier {
   Future<void> deleteArchivedTask(String taskId) async {
     try {
       _errorMessage = null;
-      await _taskService.deleteArchivedTask(taskId);
-      _tasks.removeWhere((task) => task.id == taskId);
-      _updateArchivedCount();
-      notifyListeners();
+      await _firestoreService.deleteTask(taskId);
+      // _tasks list updated via stream
     } catch (e) {
       _errorMessage = 'Failed to delete archived task: $e';
       notifyListeners();
@@ -1268,10 +1260,10 @@ class TaskProvider extends ChangeNotifier {
   Future<void> clearArchive() async {
     try {
       _errorMessage = null;
-      await _taskService.clearArchive();
-      _tasks.removeWhere((task) => task.isArchived);
-      _updateArchivedCount();
-      notifyListeners();
+      final archivedIds =
+          _tasks.where((task) => task.isArchived).map((t) => t.id).toList();
+      await _firestoreService.batchDelete(archivedIds);
+      // _tasks list updated via stream
     } catch (e) {
       _errorMessage = 'Failed to clear archive: $e';
       notifyListeners();
@@ -1283,11 +1275,17 @@ class TaskProvider extends ChangeNotifier {
   Future<void> autoArchiveOldCompletedTasks({int daysThreshold = 30}) async {
     try {
       _errorMessage = null;
-      await _taskService.autoArchiveOldCompletedTasks(
-          daysThreshold: daysThreshold);
+      final now = DateTime.now();
+      final threshold = now.subtract(Duration(days: daysThreshold));
+      final tasksToArchive = _tasks.where((task) {
+        if (!task.isCompleted || task.isArchived) return false;
+        final completedAt = task.completedAt ?? task.updatedAt;
+        return completedAt.isBefore(threshold);
+      }).toList();
 
-      // Reload tasks to get updated archive status
-      await loadTasks();
+      for (final task in tasksToArchive) {
+        await archiveTask(task.id);
+      }
     } catch (e) {
       _errorMessage = 'Failed to auto-archive tasks: $e';
       notifyListeners();
