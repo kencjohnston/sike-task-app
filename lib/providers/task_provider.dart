@@ -105,6 +105,7 @@ class TaskProvider extends ChangeNotifier {
 
     _tasksSubscription = _firestoreService.getTasksStream().listen((tasks) {
       _tasks = tasks;
+      _updateArchivedCount();
       _isLoading = false;
       notifyListeners();
     }, onError: (error) {
@@ -241,22 +242,14 @@ class TaskProvider extends ChangeNotifier {
 
       await _firestoreService.updateTask(updatedTask);
 
-      // If completing a recurring task, handle recurrence logic
+      // If completing a recurring task, update streak and create next instance
       if (isCompletingTask && task.isRecurring) {
-        // TODO: Implement full recurring task logic with Firestore
-        // For now, we just mark it as completed.
-        // The complex logic from TaskService needs to be ported to work with Firestore/Provider state.
-        /*
-        // Update streak information
-        await _taskService.updateRecurringTaskStreak(updatedTask);
-
-        // Create next instance
+        // Create next recurring instance using TaskService computation logic
         final nextInstance =
             await _taskService.createNextRecurringInstance(updatedTask);
         if (nextInstance != null) {
-           await _firestoreService.addTask(nextInstance);
+          await _firestoreService.addTask(nextInstance);
         }
-        */
       }
     } catch (e) {
       _errorMessage = 'Failed to toggle task: $e';
@@ -1308,7 +1301,7 @@ class TaskProvider extends ChangeNotifier {
     }
   }
 
-  /// Update archived task count
+  /// Update archived task count (computed from stream data)
   void _updateArchivedCount() {
     _archivedTasksCount = _tasks.where((task) => task.isArchived).length;
   }
