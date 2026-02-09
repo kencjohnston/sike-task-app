@@ -8,6 +8,7 @@ import '../services/task_service.dart';
 import '../services/recurring_task_service.dart';
 import '../services/auth_service.dart';
 import '../services/firestore_service.dart';
+import '../services/hive_to_firestore_migration.dart';
 
 /// Enum for task filtering
 enum TaskFilter {
@@ -83,10 +84,24 @@ class TaskProvider extends ChangeNotifier {
     });
   }
 
+  Future<void> _runMigrationIfNeeded() async {
+    try {
+      final migration =
+          HiveToFirestoreMigration(_taskService, _firestoreService);
+      await migration.migrate();
+    } catch (e) {
+      // Migration failure is non-fatal; user can continue with Firestore
+      _errorMessage = 'Data migration warning: $e';
+    }
+  }
+
   void _subscribeToTasks() {
     _tasksSubscription?.cancel();
     _isLoading = true;
     notifyListeners();
+
+    // Run migration before subscribing to tasks
+    _runMigrationIfNeeded();
 
     _tasksSubscription = _firestoreService.getTasksStream().listen((tasks) {
       _tasks = tasks;
