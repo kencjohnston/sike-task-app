@@ -257,7 +257,19 @@ No migration required for existing users.
 
 ## Best Practices
 
-### 1. Clarity and Precision
+### 1. Conciseness (CRITICAL)
+
+✅ **DO:**
+- Use bullet points and short sentences
+- Get straight to the point
+- Eliminate fluff and conversational filler
+
+❌ **DON'T:**
+- Write long paragraphs when a list will do
+- Over-explain obvious changes
+- Use flowery language
+
+### 2. Clarity and Precision
 
 ✅ **DO:**
 - Be specific about file paths and code locations
@@ -269,7 +281,7 @@ No migration required for existing users.
 - Assume readers know what you're referring to
 - Skip explaining the reasoning behind decisions
 
-### 2. Completeness
+### 3. Completeness
 
 ✅ **DO:**
 - Document all modified files
@@ -282,7 +294,7 @@ No migration required for existing users.
 - Forget to document configuration updates
 - Skip documenting temporary or experimental code
 
-### 3. Organization
+### 4. Organization
 
 ✅ **DO:**
 - Group related changes together
@@ -295,7 +307,7 @@ No migration required for existing users.
 - Use inconsistent formatting across documents
 - Create orphaned documentation without links
 
-### 4. Version Control
+### 5. Version Control
 
 ✅ **DO:**
 - Create version documentation BEFORE starting work
