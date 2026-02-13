@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import '../utils/app_colors.dart';
 
 part 'task_enums.g.dart';
 
@@ -285,15 +286,15 @@ extension DueDateStatusExtension on DueDateStatus {
   Color getColor() {
     switch (this) {
       case DueDateStatus.none:
-        return Colors.grey;
+        return AppColors.statusNone;
       case DueDateStatus.overdue:
-        return Colors.red;
+        return AppColors.statusOverdue;
       case DueDateStatus.dueToday:
-        return Colors.orange;
+        return AppColors.statusDueToday;
       case DueDateStatus.upcoming:
-        return Colors.blue;
+        return AppColors.statusUpcoming;
       case DueDateStatus.future:
-        return Colors.grey.shade400;
+        return AppColors.statusFuture;
     }
   }
 

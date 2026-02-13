@@ -6,6 +6,7 @@ import '../widgets/empty_state.dart';
 import '../widgets/task_filter_tabs.dart';
 import '../widgets/task_item_enhanced.dart';
 import '../widgets/batch_filter_sheet.dart';
+import '../utils/app_colors.dart';
 import '../utils/constants.dart';
 import 'task_form_screen.dart';
 import 'batch_view_screen.dart';
@@ -284,7 +285,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                           value: 'delete_all',
                           child: Row(
                             children: [
-                              Icon(Icons.delete_sweep, color: Colors.red),
+                              Icon(Icons.delete_sweep, color: AppColors.error),
                               SizedBox(width: 8),
                               Text('Delete All Tasks'),
                             ],
@@ -318,7 +319,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                     const Icon(
                       Icons.error_outline,
                       size: 64,
-                      color: Colors.red,
+                      color: AppColors.error,
                     ),
                     const SizedBox(height: AppConstants.paddingMedium),
                     Text(

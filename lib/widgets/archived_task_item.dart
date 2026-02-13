@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/task.dart';
+import '../utils/app_colors.dart';
 import '../utils/constants.dart';
 
 /// Widget to display an archived task item with restore/delete swipe actions
@@ -27,7 +28,7 @@ class ArchivedTaskItem extends StatelessWidget {
       background: Container(
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.only(left: AppConstants.paddingLarge),
-        color: Colors.blue,
+        color: AppColors.brandPrimary,
         child: const Icon(
           Icons.restore,
           color: Colors.white,
@@ -130,7 +131,8 @@ class ArchivedTaskItem extends StatelessWidget {
                       Text(
                         task.title,
                         style: theme.textTheme.titleMedium?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -142,7 +144,8 @@ class ArchivedTaskItem extends StatelessWidget {
                         Text(
                           task.description!,
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.4),
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -157,14 +160,15 @@ class ArchivedTaskItem extends StatelessWidget {
                           Icon(
                             Icons.archive_outlined,
                             size: AppConstants.iconSizeSmall,
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.4),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             'Archived ${_formatArchivedDate(task.archivedAt)}',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color:
-                                  theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.4),
                               fontStyle: FontStyle.italic,
                             ),
                           ),
@@ -205,8 +209,8 @@ class ArchivedTaskItem extends StatelessWidget {
                             Icon(
                               Icons.check_circle_outline,
                               size: AppConstants.iconSizeSmall,
-                              color:
-                                  theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.4),
                             ),
                             const SizedBox(width: 4),
                             Text(

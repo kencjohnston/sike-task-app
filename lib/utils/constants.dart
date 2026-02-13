@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'app_colors.dart';
 
 /// Application-wide constants
 class AppConstants {
   // App Information
   static const String appName = 'Sike';
-  static const String appVersion = '1.0.0';
+  static const String appVersion = '1.3.0';
 
   // Spacing and Padding
   static const double paddingSmall = 8.0;
@@ -85,9 +86,9 @@ class AppConstants {
   static const String filterCompleted = 'Completed';
 
   // Priority Colors
-  static const Color priorityLowColor = Colors.green;
-  static const Color priorityMediumColor = Colors.orange;
-  static const Color priorityHighColor = Colors.red;
+  static const Color priorityLowColor = AppColors.priorityLow;
+  static const Color priorityMediumColor = AppColors.priorityMedium;
+  static const Color priorityHighColor = AppColors.priorityHigh;
 
   // Helper method to get priority label
   static String getPriorityLabel(int priority) {
@@ -104,14 +105,6 @@ class AppConstants {
 
   // Helper method to get priority color
   static Color getPriorityColor(int priority) {
-    switch (priority) {
-      case priorityHigh:
-        return priorityHighColor;
-      case priorityMedium:
-        return priorityMediumColor;
-      case priorityLow:
-      default:
-        return priorityLowColor;
-    }
+    return AppColors.getPriorityColor(priority);
   }
 }

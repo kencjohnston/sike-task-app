@@ -9,6 +9,7 @@ import 'providers/task_provider.dart';
 import 'screens/task_list_screen.dart';
 import 'services/migration_service.dart';
 import 'services/task_service.dart';
+import 'utils/app_colors.dart';
 import 'utils/app_logger.dart';
 import 'utils/constants.dart';
 
@@ -97,17 +98,11 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF87CEEB), // Light blue
-            primary: const Color(0xFF87CEEB), // Light blue
-            secondary: const Color(0xFFE91E63), // Pink
-            tertiary: const Color(0xFF9C27B0), // Purple
-            brightness: Brightness.light,
-          ),
+          colorScheme: AppColors.lightColorScheme(),
           appBarTheme: const AppBarTheme(
             centerTitle: false,
             elevation: 0,
-            backgroundColor: Color(0xFF87CEEB), // Light blue
+            backgroundColor: AppColors.brandPrimary,
             foregroundColor: Colors.white,
           ),
           cardTheme: CardThemeData(
@@ -119,23 +114,17 @@ class MyApp extends StatelessWidget {
           ),
           floatingActionButtonTheme: const FloatingActionButtonThemeData(
             elevation: 4,
-            backgroundColor: Color(0xFFE91E63), // Pink
+            backgroundColor: AppColors.brandSecondary,
             foregroundColor: Colors.white,
           ),
         ),
         darkTheme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF5FA8D3), // Darker light blue
-            primary: const Color(0xFF5FA8D3), // Darker light blue
-            secondary: const Color(0xFFC2185B), // Darker pink
-            tertiary: const Color(0xFF7B1FA2), // Darker purple
-            brightness: Brightness.dark,
-          ),
+          colorScheme: AppColors.darkColorScheme(),
           appBarTheme: const AppBarTheme(
             centerTitle: false,
             elevation: 0,
-            backgroundColor: Color(0xFF5FA8D3), // Darker light blue
+            backgroundColor: AppColors.brandPrimaryDark,
             foregroundColor: Colors.white,
           ),
           cardTheme: CardThemeData(
@@ -147,7 +136,7 @@ class MyApp extends StatelessWidget {
           ),
           floatingActionButtonTheme: const FloatingActionButtonThemeData(
             elevation: 4,
-            backgroundColor: Color(0xFFC2185B), // Darker pink
+            backgroundColor: AppColors.brandSecondaryDark,
             foregroundColor: Colors.white,
           ),
         ),

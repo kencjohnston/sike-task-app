@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/app_colors.dart';
 
 /// Visual indicator for streak with emoji and animation
 class StreakIndicator extends StatefulWidget {
@@ -14,7 +15,7 @@ class StreakIndicator extends StatefulWidget {
     required this.label,
     required this.streakValue,
     this.icon = Icons.local_fire_department,
-    this.color = Colors.orange,
+    this.color = AppColors.warning,
     this.isAnimated = false,
     this.onTap,
   });
@@ -29,7 +30,7 @@ class StreakIndicator extends StatefulWidget {
       label: 'Current Streak',
       streakValue: streakValue,
       icon: Icons.local_fire_department,
-      color: Colors.deepOrange,
+      color: AppColors.streakActive,
       isAnimated: isAnimated,
       onTap: onTap,
     );
@@ -44,7 +45,7 @@ class StreakIndicator extends StatefulWidget {
       label: 'Longest Streak',
       streakValue: streakValue,
       icon: Icons.emoji_events,
-      color: Colors.amber,
+      color: AppColors.streakRecord,
       isAnimated: false,
       onTap: onTap,
     );
@@ -213,10 +214,10 @@ class StreakBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: (color ?? Colors.deepOrange).withValues(alpha: 0.2),
+        color: (color ?? AppColors.streakActive).withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: (color ?? Colors.deepOrange).withValues(alpha: 0.5),
+          color: (color ?? AppColors.streakActive).withValues(alpha: 0.5),
           width: 1,
         ),
       ),
@@ -226,7 +227,7 @@ class StreakBadge extends StatelessWidget {
           Icon(
             Icons.local_fire_department,
             size: 14,
-            color: color ?? Colors.deepOrange,
+            color: color ?? AppColors.streakActive,
           ),
           const SizedBox(width: 2),
           Text(
@@ -234,7 +235,7 @@ class StreakBadge extends StatelessWidget {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
-              color: color ?? Colors.deepOrange,
+              color: color ?? AppColors.streakActive,
             ),
           ),
         ],
