@@ -52,19 +52,21 @@ flutter:
     - assets/images/
 
 flutter_native_splash:
-  color: "#87CEEB"
-  color_dark: "#5FA8D3"
+  color: "#275790"
+  color_dark: "#1D3D5F"
+  image: assets/images/sike-logo.png
   android: true
   ios: true
   web: false
   
   android_12:
-    color: "#87CEEB"
-    color_dark: "#5FA8D3"
+    color: "#275790"
+    color_dark: "#1D3D5F"
+    image: assets/images/sike-logo.png
 
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/logo.svg"
+  image_path: "assets/images/sike-logo.png"
   adaptive_icon_background: "#87CEEB"
-  adaptive_icon_foreground: "assets/images/logo.svg"
+  adaptive_icon_foreground: "assets/images/sike-logo.png"
