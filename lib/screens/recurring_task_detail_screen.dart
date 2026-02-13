@@ -4,6 +4,7 @@ import '../models/task.dart';
 import '../models/recurring_task_stats.dart';
 import '../providers/task_provider.dart';
 import '../services/recurring_task_service.dart';
+import '../utils/app_colors.dart';
 import '../widgets/recurring_stats_card.dart';
 import '../widgets/streak_indicator.dart';
 import '../widgets/instance_timeline_item.dart';
@@ -223,7 +224,8 @@ class _RecurringTaskDetailScreenState extends State<RecurringTaskDetailScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
+            Icon(Icons.error_outline,
+                size: 64, color: AppColors.error.withValues(alpha: 0.7)),
             const SizedBox(height: 16),
             Text(
               'Error',

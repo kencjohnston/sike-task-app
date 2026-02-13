@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/recurrence_rule.dart';
 import '../services/task_service.dart';
+import '../utils/app_colors.dart';
 
 /// Widget showing next N upcoming occurrences of a recurring task
 class RecurrencePreviewList extends StatelessWidget {
@@ -59,7 +60,7 @@ class RecurrencePreviewList extends StatelessWidget {
               width: 24,
               height: 24,
               decoration: BoxDecoration(
-                color: Colors.blue.withValues(alpha: 0.2),
+                color: AppColors.brandPrimary.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -68,7 +69,7 @@ class RecurrencePreviewList extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue,
+                    color: AppColors.brandPrimary,
                   ),
                 ),
               ),
@@ -88,12 +89,12 @@ class RecurrencePreviewList extends StatelessWidget {
       child: ListTile(
         dense: true,
         leading: CircleAvatar(
-          backgroundColor: Colors.blue.withValues(alpha: 0.2),
+          backgroundColor: AppColors.brandPrimary.withValues(alpha: 0.2),
           child: Text(
             index.toString(),
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              color: Colors.blue,
+              color: AppColors.brandPrimary,
             ),
           ),
         ),

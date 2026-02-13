@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/task.dart';
+import '../utils/app_colors.dart';
 
 /// List item showing individual recurring instance in timeline
 class InstanceTimelineItem extends StatelessWidget {
@@ -172,15 +173,15 @@ class InstanceTimelineItem extends StatelessWidget {
   Color _getStatusColor(_InstanceStatus status) {
     switch (status) {
       case _InstanceStatus.completed:
-        return Colors.green;
+        return AppColors.success;
       case _InstanceStatus.skipped:
-        return Colors.orange;
+        return AppColors.warning;
       case _InstanceStatus.missed:
-        return Colors.red;
+        return AppColors.error;
       case _InstanceStatus.dueToday:
-        return Colors.blue;
+        return AppColors.brandPrimary;
       case _InstanceStatus.pending:
-        return Colors.grey;
+        return AppColors.statusNone;
     }
   }
 

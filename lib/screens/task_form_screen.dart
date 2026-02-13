@@ -7,11 +7,15 @@ import '../models/task_enums.dart';
 import '../models/recurrence_rule.dart';
 import '../providers/task_provider.dart';
 import '../services/task_service.dart';
+import '../utils/app_colors.dart';
 import '../utils/constants.dart';
 import '../widgets/subtask_management_sheet.dart';
 import '../widgets/weekday_selector.dart';
 import '../widgets/monthly_pattern_selector.dart';
 import '../widgets/recurrence_preview.dart';
+import '../widgets/metadata_preset_selector.dart';
+import '../widgets/metadata_summary_chips.dart';
+import '../widgets/metadata_bottom_sheet.dart';
 
 /// Screen for creating or editing a task
 class TaskFormScreen extends StatefulWidget {
@@ -44,6 +48,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
   EnergyLevel _energyRequired = EnergyLevel.medium;
   TimeEstimate _timeEstimate = TimeEstimate.medium;
 
+  String? _selectedPresetName;
   DateTime? _selectedDueDate;
 
   // Recurrence fields
@@ -584,7 +589,8 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                             const EdgeInsets.all(AppConstants.paddingMedium),
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: theme.colorScheme.outline.withValues(alpha: 0.5),
+                            color: theme.colorScheme.outline
+                                .withValues(alpha: 0.5),
                           ),
                           borderRadius: BorderRadius.circular(
                               AppConstants.borderRadiusMedium),
@@ -1032,7 +1038,7 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
               ),
             ],
 
-            // Batch metadata section (only for top-level tasks)
+            // Task Details section (only for top-level tasks)
             if (widget.task == null || widget.task!.nestingLevel == 0) ...[
               const SizedBox(height: AppConstants.paddingMedium),
               Card(
@@ -1044,13 +1050,13 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                       Row(
                         children: [
                           Icon(
-                            Icons.batch_prediction,
+                            Icons.tune,
                             size: AppConstants.iconSizeMedium,
                             color: theme.colorScheme.primary,
                           ),
                           const SizedBox(width: AppConstants.paddingSmall),
                           Text(
-                            'Batch Metadata',
+                            'Task Details',
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
@@ -1059,151 +1065,67 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                       ),
                       const SizedBox(height: AppConstants.paddingMedium),
 
-                      // Task Type
-                      DropdownButtonFormField<TaskType>(
-                        initialValue: _taskType,
-                        decoration: InputDecoration(
-                          labelText: 'Task Type',
-                          border: const OutlineInputBorder(),
-                          prefixIcon: Icon(_taskType.icon),
-                        ),
-                        items: TaskType.values
-                            .map((type) => DropdownMenuItem(
-                                  value: type,
-                                  child: Row(
-                                    children: [
-                                      Icon(type.icon, size: 20),
-                                      const SizedBox(width: 8),
-                                      Text(type.displayLabel),
-                                    ],
-                                  ),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() => _taskType = value);
+                      // Preset Quick-Select row
+                      MetadataPresetSelector(
+                        selectedPresetName: _selectedPresetName,
+                        onPresetSelected: (preset) {
+                          setState(() {
+                            _taskType = preset.taskType;
+                            _selectedResources = List.from(preset.resources);
+                            _taskContext = preset.taskContext;
+                            _energyRequired = preset.energyLevel;
+                            _timeEstimate = preset.timeEstimate;
+                            _selectedPresetName = preset.name;
+                          });
+                        },
+                        onCustomTap: () async {
+                          final result = await showMetadataBottomSheet(
+                            context,
+                            taskType: _taskType,
+                            resources: _selectedResources,
+                            taskContext: _taskContext,
+                            energyLevel: _energyRequired,
+                            timeEstimate: _timeEstimate,
+                          );
+                          if (result != null) {
+                            setState(() {
+                              _taskType = result.taskType;
+                              _selectedResources = List.from(result.resources);
+                              _taskContext = result.taskContext;
+                              _energyRequired = result.energyLevel;
+                              _timeEstimate = result.timeEstimate;
+                              _selectedPresetName = null;
+                            });
                           }
                         },
                       ),
                       const SizedBox(height: AppConstants.paddingMedium),
 
-                      // Required Resources
-                      Text(
-                        'Required Resources',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: RequiredResource.values.map((resource) {
-                          final isSelected =
-                              _selectedResources.contains(resource);
-                          return FilterChip(
-                            label: Text(resource.displayLabel),
-                            avatar: Icon(resource.icon, size: 16),
-                            selected: isSelected,
-                            onSelected: (selected) {
-                              setState(() {
-                                if (selected) {
-                                  _selectedResources.add(resource);
-                                } else {
-                                  _selectedResources.remove(resource);
-                                }
-                              });
-                            },
+                      // Collapsed Summary chips
+                      MetadataSummaryChips(
+                        taskType: _taskType,
+                        resources: _selectedResources,
+                        taskContext: _taskContext,
+                        energyLevel: _energyRequired,
+                        timeEstimate: _timeEstimate,
+                        onEditTap: () async {
+                          final result = await showMetadataBottomSheet(
+                            context,
+                            taskType: _taskType,
+                            resources: _selectedResources,
+                            taskContext: _taskContext,
+                            energyLevel: _energyRequired,
+                            timeEstimate: _timeEstimate,
                           );
-                        }).toList(),
-                      ),
-                      const SizedBox(height: AppConstants.paddingMedium),
-
-                      // Context
-                      DropdownButtonFormField<TaskContext>(
-                        initialValue: _taskContext,
-                        decoration: InputDecoration(
-                          labelText: 'Context',
-                          border: const OutlineInputBorder(),
-                          prefixIcon: Icon(_taskContext.icon),
-                        ),
-                        items: TaskContext.values
-                            .map((context) => DropdownMenuItem(
-                                  value: context,
-                                  child: Row(
-                                    children: [
-                                      Icon(context.icon, size: 20),
-                                      const SizedBox(width: 8),
-                                      Text(context.displayLabel),
-                                    ],
-                                  ),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() => _taskContext = value);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: AppConstants.paddingMedium),
-
-                      // Energy Level
-                      Text(
-                        'Energy Level',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: EnergyLevel.values.map((energy) {
-                          final isSelected = _energyRequired == energy;
-                          return ChoiceChip(
-                            label: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(energy.icon, size: 16),
-                                const SizedBox(width: 4),
-                                Text(energy.displayLabel
-                                    .replaceAll(' Energy', '')),
-                              ],
-                            ),
-                            selected: isSelected,
-                            onSelected: (selected) {
-                              if (selected) {
-                                setState(() => _energyRequired = energy);
-                              }
-                            },
-                          );
-                        }).toList(),
-                      ),
-                      const SizedBox(height: AppConstants.paddingMedium),
-
-                      // Time Estimate
-                      DropdownButtonFormField<TimeEstimate>(
-                        initialValue: _timeEstimate,
-                        decoration: InputDecoration(
-                          labelText: 'Estimated Time',
-                          border: const OutlineInputBorder(),
-                          prefixIcon: Icon(_timeEstimate.icon),
-                        ),
-                        items: TimeEstimate.values
-                            .map((time) => DropdownMenuItem(
-                                  value: time,
-                                  child: Row(
-                                    children: [
-                                      Icon(time.icon, size: 20),
-                                      const SizedBox(width: 8),
-                                      Text(time.displayLabel),
-                                    ],
-                                  ),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() => _timeEstimate = value);
+                          if (result != null) {
+                            setState(() {
+                              _taskType = result.taskType;
+                              _selectedResources = List.from(result.resources);
+                              _taskContext = result.taskContext;
+                              _energyRequired = result.energyLevel;
+                              _timeEstimate = result.timeEstimate;
+                              _selectedPresetName = null;
+                            });
                           }
                         },
                       ),
@@ -1378,11 +1300,11 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
     final difference = dueDate.difference(today).inDays;
 
     if (difference < 0) {
-      return Colors.red;
+      return AppColors.error;
     } else if (difference == 0) {
-      return Colors.orange;
+      return AppColors.warning;
     } else if (difference <= 7) {
-      return Colors.blue;
+      return AppColors.brandPrimary;
     } else {
       return theme.colorScheme.onSurfaceVariant;
     }
@@ -1476,8 +1398,9 @@ class _PriorityChip extends StatelessWidget {
           color: isSelected ? color.withValues(alpha: 0.2) : Colors.transparent,
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusMedium),
           border: Border.all(
-            color:
-                isSelected ? color : theme.colorScheme.outline.withValues(alpha: 0.3),
+            color: isSelected
+                ? color
+                : theme.colorScheme.outline.withValues(alpha: 0.3),
             width: isSelected ? 2 : 1,
           ),
         ),

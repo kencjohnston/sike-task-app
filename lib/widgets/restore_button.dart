@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/app_colors.dart';
 import '../utils/constants.dart';
 
 /// Button/icon to restore an archived task with confirmation dialog
@@ -56,7 +57,7 @@ class RestoreButton extends StatelessWidget {
               ),
             ],
           ),
-          backgroundColor: Colors.green,
+          backgroundColor: AppColors.success,
           duration: const Duration(seconds: 3),
           action: SnackBarAction(
             label: 'View',

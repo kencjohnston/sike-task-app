@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/recurring_task_stats.dart';
+import '../utils/app_colors.dart';
 
 /// Widget displaying key statistics for a recurring task
 class RecurringStatsCard extends StatelessWidget {
@@ -70,7 +71,7 @@ class RecurringStatsCard extends StatelessWidget {
                     'Total',
                     stats.totalInstances.toString(),
                     Icons.calendar_month,
-                    Colors.blue,
+                    AppColors.brandPrimary,
                   ),
                 ),
                 Expanded(
@@ -79,7 +80,7 @@ class RecurringStatsCard extends StatelessWidget {
                     'Completed',
                     stats.completedInstances.toString(),
                     Icons.check_circle,
-                    Colors.green,
+                    AppColors.success,
                   ),
                 ),
               ],
@@ -93,7 +94,7 @@ class RecurringStatsCard extends StatelessWidget {
                     'Missed',
                     stats.missedInstances.toString(),
                     Icons.cancel,
-                    Colors.red,
+                    AppColors.error,
                   ),
                 ),
                 Expanded(
@@ -102,7 +103,7 @@ class RecurringStatsCard extends StatelessWidget {
                     'Skipped',
                     stats.skippedInstances.toString(),
                     Icons.fast_forward,
-                    Colors.orange,
+                    AppColors.warning,
                   ),
                 ),
               ],
@@ -186,11 +187,11 @@ class RecurringStatsCard extends StatelessWidget {
 
   Color _getCompletionColor() {
     if (stats.hasGoodCompletionRate) {
-      return Colors.green;
+      return AppColors.success;
     } else if (stats.hasModerateCompletionRate) {
-      return Colors.orange;
+      return AppColors.warning;
     } else {
-      return Colors.red;
+      return AppColors.error;
     }
   }
 

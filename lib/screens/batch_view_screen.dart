@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../models/task.dart';
 import '../models/task_enums.dart';
 import '../providers/task_provider.dart';
+import '../utils/app_colors.dart';
 import '../utils/constants.dart';
 import 'task_form_screen.dart';
 
@@ -255,11 +256,11 @@ class _EnergyGroupTab extends StatelessWidget {
   Color _getEnergyColor(EnergyLevel energy, BuildContext context) {
     switch (energy) {
       case EnergyLevel.high:
-        return Colors.red;
+        return AppColors.energyHigh;
       case EnergyLevel.medium:
-        return Colors.orange;
+        return AppColors.energyMedium;
       case EnergyLevel.low:
-        return Colors.green;
+        return AppColors.energyLow;
     }
   }
 
@@ -592,7 +593,10 @@ Widget _buildEmptyState(
         subMessage,
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.7),
             ),
       ),
     ],

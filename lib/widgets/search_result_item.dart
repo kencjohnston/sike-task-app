@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/task.dart';
 import '../models/task_enums.dart';
+import '../utils/app_colors.dart';
 
 /// Search result item with highlighted matched text
 class SearchResultItem extends StatelessWidget {
@@ -72,11 +73,11 @@ class SearchResultItem extends StatelessWidget {
   Color _getPriorityColor(BuildContext context) {
     switch (task.priority) {
       case 2: // High
-        return Colors.red;
+        return AppColors.priorityHigh;
       case 1: // Medium
-        return Colors.orange;
+        return AppColors.priorityMedium;
       default: // Low
-        return Colors.blue;
+        return AppColors.priorityLow;
     }
   }
 
@@ -139,7 +140,8 @@ class SearchResultItem extends StatelessWidget {
                       child: RichText(
                         text: TextSpan(
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.6),
                           ),
                           children: _buildHighlightedText(
                             task.description!.length > 100
@@ -183,7 +185,8 @@ class SearchResultItem extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: _getPriorityColor(context).withValues(alpha: 0.1),
+                            color: _getPriorityColor(context)
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: _getPriorityColor(context),
